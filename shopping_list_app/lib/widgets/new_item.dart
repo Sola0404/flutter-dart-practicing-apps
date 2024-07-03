@@ -33,33 +33,35 @@ class _NewItemState extends State<NewItem> {
       final url = Uri.https(
           'flutter-grocery-app-9fbd1-default-rtdb.firebaseio.com',
           'shopping-list.json');
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: json.encode(
-          {
-            'name': _enteredName,
-            'quantity': _enteredQuantity,
-            'category': _selectedCategory.title,
+      try {
+        final response = await http.post(
+          url,
+          headers: {
+            'Content-Type': 'application/json',
           },
-        ),
-      );
+          body: json.encode(
+            {
+              'name': _enteredName,
+              'quantity': _enteredQuantity,
+              'category': _selectedCategory.title,
+            },
+          ),
+        );
 
-      final Map<String, dynamic> resData = json.decode(response.body);
+        final Map<String, dynamic> resData = json.decode(response.body);
 
-      if (!context.mounted) {
-        return;
-      }
+        if (!context.mounted) {
+          return;
+        }
 
-      Navigator.of(context).pop(
-        GroceryItem(
-            id: resData['name'],
-            name: _enteredName,
-            quantity: _enteredQuantity,
-            category: _selectedCategory),
-      );
+        Navigator.of(context).pop(
+          GroceryItem(
+              id: resData['name'],
+              name: _enteredName,
+              quantity: _enteredQuantity,
+              category: _selectedCategory),
+        );
+      } catch (error) {}
     }
   }
 
